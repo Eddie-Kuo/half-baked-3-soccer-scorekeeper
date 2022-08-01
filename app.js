@@ -36,7 +36,7 @@ nameFormButton.addEventListener('click', () => {
     teamTwoInput.value = '';
     // refresh the current game element with new data by calling the appropriate function
     currentGameEl.append(renderTeam(name1, name2));
-    renderGame(name1, name2, score1, score2);
+    refreshCurrentGameEl();
 });
 
 
@@ -75,7 +75,14 @@ teamTwoSubtractButton.addEventListener('click', () => {
 });
 
 finishGameButton.addEventListener('click', () => {
-    
+    const newGame = {
+        name1: name1,
+        name2: name2,
+        score1: score1,
+        score2: score2,
+    };
+
+    pastGamesArr.push(newGame);
     // add the current game to an array of games in state
     // it will be helpful to keep track of these games as objects with 4 properties, one for each piece of state we're tracking
     // for example, make an object like this: { name1: 'ducks', name2: 'bears' ,score1: 1, score2: 2 } 
@@ -85,9 +92,15 @@ finishGameButton.addEventListener('click', () => {
     displayAllGames();
 
     // reset the state to zero and empty strings
-    
+    name1 = '';
+    name2 = '';
+    score1 = 0;
+    score2 = 0;
+    refreshCurrentGameEl();
     // refresh the current game element with new data by calling the appropriate function
 });
+
+
 
 function refreshCurrentGameEl() {
     currentGameEl.textContent = '';
@@ -108,8 +121,12 @@ function refreshCurrentGameEl() {
 
 function displayAllGames() {
     // clear out the past games list in the DOM
-
+    pastGamesEl.textContent = '';
     // loop through the past games in state
+    for (let pastGame of pastGamesArr) {
+        pastGamesEl.append(renderGame(pastGame.name1, pastGame.name2, pastGame.score1, pastGame.score2));
+    }
+}
     // use the renderGame function to render and append a past game for each past game in state
     // again, review the renderGame function in render-utils.js. How many arguments does it take? What order does it take them in?
-}
+
